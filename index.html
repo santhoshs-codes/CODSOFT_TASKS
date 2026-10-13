@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,16 +9,16 @@
     <style>
         /* ===== 1. VARIABLES & RESET ===== */
         :root {
-            --bg: #0a1128;
-            --bg-alt: #0d1733;
-            --card: #111c3d;
-            --border: rgba(125, 180, 255, 0.15);
-            --text: #e6edf8;
-            --muted: #9fb0cc;
-            --blue: #3b82f6;
-            --cyan: #22d3ee;
-            --grad: linear-gradient(135deg, var(--blue), var(--cyan));
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --bg: #090909;
+            --bg-alt: #111111;
+            --card: #181818;
+            --border: rgba(255, 65, 65, 0.20);
+            --text: #f5f5f5;
+            --muted: #b0b0b0;
+            --blue: #dc2626;
+            --cyan: #ff4545;
+            --grad: linear-gradient(135deg, #b91c1c, #ff4545);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
             --radius: 16px;
         }
 
@@ -93,13 +92,13 @@
 
         .btn-primary {
             background: var(--grad);
-            color: #04101f;
-            box-shadow: 0 6px 20px rgba(34, 211, 238, 0.2);
+            color: #ffffff;
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.22);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 26px rgba(34, 211, 238, 0.35);
+            box-shadow: 0 10px 26px rgba(255, 69, 69, 0.35);
         }
 
         .btn-outline {
@@ -109,7 +108,7 @@
 
         .btn-outline:hover {
             background: var(--cyan);
-            color: #04101f;
+            color: #ffffff;
             transform: translateY(-3px);
         }
 
@@ -120,7 +119,7 @@
             left: 0;
             width: 100%;
             z-index: 100;
-            background: rgba(10, 17, 40, 0.94);
+            background: rgba(9, 9, 9, 0.96);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
         }
@@ -189,9 +188,9 @@
             padding-top: 120px;
             background:
                 radial-gradient(circle at 80% 20%,
-                    rgba(34, 211, 238, 0.13), transparent 45%),
+                    rgba(255, 45, 45, 0.13), transparent 45%),
                 radial-gradient(circle at 10% 80%,
-                    rgba(59, 130, 246, 0.16), transparent 45%),
+                    rgba(185, 28, 28, 0.15), transparent 45%),
                 var(--bg);
         }
 
@@ -208,7 +207,7 @@
             color: var(--cyan);
             font-size: 0.9rem;
             margin-bottom: 18px;
-            background: rgba(34, 211, 238, 0.06);
+            background: rgba(255, 45, 45, 0.07);
         }
 
         .hero-text h1 {
@@ -260,7 +259,6 @@
             align-items: center;
         }
 
-        /* Profile photo: controlled size */
         .profile-photo {
             width: 190px;
             height: 190px;
@@ -269,7 +267,7 @@
             object-fit: cover;
             object-position: center;
             border: 4px solid var(--cyan);
-            box-shadow: var(--shadow);
+            box-shadow: 0 0 25px rgba(255, 45, 45, 0.18);
             animation: float 5s ease-in-out infinite;
         }
 
@@ -293,7 +291,7 @@
         .interests li {
             padding: 6px 14px;
             border-radius: 50px;
-            background: rgba(59, 130, 246, 0.12);
+            background: rgba(220, 38, 38, 0.12);
             border: 1px solid var(--border);
             color: var(--cyan);
             font-size: 0.9rem;
@@ -320,7 +318,7 @@
         .skill-card:hover {
             transform: translateY(-7px);
             border-color: var(--cyan);
-            box-shadow: 0 14px 30px rgba(34, 211, 238, 0.12);
+            box-shadow: 0 14px 30px rgba(255, 45, 45, 0.12);
         }
 
         .skill-icon {
@@ -329,7 +327,7 @@
             margin: 0 auto 12px;
             border-radius: 14px;
             background: var(--grad);
-            color: #04101f;
+            color: #ffffff;
             font-weight: 800;
             display: flex;
             align-items: center;
@@ -380,7 +378,7 @@
             align-items: center;
             justify-content: center;
             padding: 15px;
-            color: #fff;
+            color: #ffffff;
             text-align: center;
             font-size: 1.2rem;
             font-weight: 700;
@@ -393,15 +391,15 @@
         }
 
         .v1 {
-            background: linear-gradient(135deg, #1d4ed8, #22d3ee);
+            background: linear-gradient(135deg, #7f1d1d, #dc2626);
         }
 
         .v2 {
-            background: linear-gradient(135deg, #0e7490, #3b82f6);
+            background: linear-gradient(135deg, #991b1b, #ef4444);
         }
 
         .v3 {
-            background: linear-gradient(135deg, #312e81, #06b6d4);
+            background: linear-gradient(135deg, #450a0a, #b91c1c);
         }
 
         .project-body {
@@ -416,7 +414,7 @@
             font-size: 0.75rem;
             padding: 3px 12px;
             border-radius: 50px;
-            background: rgba(34, 211, 238, 0.12);
+            background: rgba(255, 45, 45, 0.12);
             color: var(--cyan);
             margin-bottom: 10px;
         }
@@ -444,8 +442,8 @@
             font-size: 0.8rem;
             padding: 4px 10px;
             border-radius: 6px;
-            background: rgba(59, 130, 246, 0.15);
-            color: #93c5fd;
+            background: rgba(220, 38, 38, 0.15);
+            color: #ff9999;
         }
 
         .note {
@@ -764,7 +762,6 @@
                 <div class="about-grid">
 
                     <div class="photo-wrap">
-                        <!-- Keep your photo in images/profile.jpeg -->
                         <img
                             src="images/profile.jpeg"
                             alt="Photo of Santhosh"
@@ -870,7 +867,6 @@
 
                 <div class="projects-grid">
 
-                    <!-- Project 1 -->
                     <article class="project-card">
                         <div class="project-visual-wrap">
                             <div class="project-visual v1"
@@ -898,7 +894,6 @@
                         </div>
                     </article>
 
-                    <!-- Project 2 -->
                     <article class="project-card">
                         <div class="project-visual-wrap">
                             <div class="project-visual v2"
@@ -927,7 +922,6 @@
                         </div>
                     </article>
 
-                    <!-- Project 3 -->
                     <article class="project-card">
                         <div class="project-visual-wrap">
                             <div class="project-visual v3"
@@ -982,7 +976,6 @@
                         internships, learning opportunities and collaboration.
                     </p>
 
-                    <!-- Put your actual resume.pdf beside index.html -->
                     <a href="resume.pdf"
                        download
                        class="btn btn-primary">
