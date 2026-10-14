@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QuizForge - Online Quiz Maker</title>
+<style>
+:root{--bg:#0a0a0a;--card:#161616;--card2:#1f1f1f;--line:#2e2e2e;--red:#e11d2e;--red2:#ff4d5a;--txt:#f4f4f4;--mut:#a3a3a3;--ok:#22c55e;--r:14px}
+*{box-sizing:border-box;margin:0}
+body{background:radial-gradient(900px 400px at 85% -5%,#3a0810,transparent),var(--bg);color:var(--txt);font:16px/1.6 "Segoe UI",system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+h1,h2,h3{line-height:1.2;letter-spacing:-.02em}
+a{color:var(--red2)}
+:focus-visible{outline:3px solid var(--red2);outline-offset:2px}
+header{position:sticky;top:0;z-index:10;background:rgba(10,10,10,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1100px;margin:auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.25rem;background:none;border:0;color:var(--txt);cursor:pointer}
+.logo i{width:34px;height:34px;border-radius:9px;background:var(--red);display:grid;place-items:center;font-style:normal;box-shadow:0 0 18px #e11d2e66}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav button{background:none;border:0;color:var(--mut);padding:8px 12px;border-radius:8px;cursor:pointer;font:inherit;font-weight:600}
+nav button:hover,nav button.on{color:#fff;background:var(--card2)}
+nav button.on{box-shadow:inset 0 -2px var(--red)}
+#menu{display:none;background:var(--card2);color:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+main{flex:1;width:100%;max-width:1100px;margin:auto;padding:28px 20px 50px}
+footer{border-top:1px solid var(--line);text-align:center;color:var(--mut);padding:22px 16px;font-size:.9rem}
+.btn{display:inline-block;background:var(--red);color:#fff;border:0;border-radius:10px;padding:11px 20px;font:inherit;font-weight:700;cursor:pointer;transition:transform .15s,background .15s}
+.btn:hover{background:var(--red2);transform:translateY(-1px)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--txt)}
+.btn.ghost:hover{border-color:var(--red);background:var(--card2)}
+.btn.sm{padding:6px 12px;font-size:.88rem}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.hero{padding:40px 0 30px;max-width:720px}
+.hero h1{font-size:clamp(2.2rem,6vw,3.8rem);margin-bottom:14px}
+.hero h1 b{color:var(--red)}
+.hero p{color:var(--mut);font-size:1.1rem;margin-bottom:24px}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:12px 0 36px}
+.stat{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:var(--r);padding:16px}
+.stat b{font-size:1.9rem;display:block}
+.stat span{color:var(--mut);font-size:.9rem}
+h2.t{font-size:1.6rem;margin:6px 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:10px;transition:border-color .2s,transform .2s}
+.card:hover{border-color:var(--red);transform:translateY(-3px)}
+.card p{color:var(--mut);font-size:.95rem;flex:1}
+.tag{align-self:flex-start;background:#e11d2e26;color:var(--red2);padding:2px 10px;border-radius:99px;font-size:.78rem;font-weight:700}
+.meta{color:var(--mut);font-size:.85rem}
+.tools{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+input,textarea,select{width:100%;background:var(--card2);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:11px 13px;font:inherit}
+input:focus,textarea:focus,select:focus{border-color:var(--red);outline:2px solid #e11d2e55}
+.tools input{flex:1 1 240px;width:auto}
+.chip{background:var(--card2);border:1px solid var(--line);color:var(--txt);padding:8px 14px;border-radius:99px;cursor:pointer;font:inherit}
+.chip.on{background:var(--red);border-color:var(--red)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:18px}
+.narrow{max-width:760px;margin:auto}
+label.l{display:block;font-weight:600;margin:14px 0 6px}
+.err{color:var(--red2);font-size:.88rem;margin-top:4px;min-height:1px}
+.qbox{border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:16px;background:var(--card2)}
+.qbox .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.oprow{display:flex;gap:10px;align-items:center;margin-top:10px}
+.oprow input[type=radio]{width:20px;height:20px;accent-color:var(--red);flex:none}
+.opt{display:flex;gap:12px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:border-color .15s}
+.opt:hover{border-color:var(--red2)}
+.opt input{accent-color:var(--red);width:18px;height:18px;flex:none}
+.opt.sel{border-color:var(--red);background:#e11d2e1a}
+.prog{height:10px;background:var(--card2);border-radius:99px;overflow:hidden;margin:10px 0 22px}
+.prog div{height:100%;background:linear-gradient(90deg,var(--red),var(--red2));transition:width .3s}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:18px}
+.dot{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--card2);color:var(--txt);cursor:pointer}
+.dot.done{background:#e11d2e33;border-color:var(--red)}
+.dot.cur{outline:2px solid #fff}
+.nav2{display:flex;justify-content:space-between;gap:10px;margin-top:20px;flex-wrap:wrap}
+.score{text-align:center}
+.ring{width:170px;height:170px;border-radius:50%;margin:10px auto 16px;display:grid;place-items:center;font-size:2.4rem;font-weight:800}
+.ring span{background:var(--card);width:132px;height:132px;border-radius:50%;display:grid;place-items:center}
+.rev{border-left:4px solid var(--line)}
+.rev.ok{border-left-color:var(--ok)}
+.rev.bad{border-left-color:var(--red)}
+.good{color:var(--ok);font-weight:600}.bad{color:var(--red2);font-weight:600}
+.empty{text-align:center;color:var(--mut);padding:40px 16px;border:1px dashed var(--line);border-radius:var(--r)}
+.empty .btn{margin-top:14px}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--mut);font-weight:600}
+.wrap{overflow-x:auto}
+.note{font-size:.82rem;color:var(--mut);background:var(--card2);border-left:3px solid var(--red);padding:10px 12px;border-radius:8px;margin-top:16px}
+#toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,90px);background:#1c1c1c;border:1px solid var(--red);padding:12px 20px;border-radius:10px;transition:transform .3s;z-index:50;max-width:90vw}
+#toast.show{transform:translate(-50%,0)}
+.fade{animation:f .35s ease}
+@keyframes f{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(max-width:760px){#menu{display:block}nav{display:none;width:100%}nav.open{display:flex;flex-direction:column}.bar{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <button class="logo" onclick="go('home')" aria-label="QuizForge home"><i aria-hidden="true">Q</i>QuizForge</button>
+  <button id="menu" aria-label="Toggle menu" aria-expanded="false" onclick="toggleMenu()">Menu</button>
+  <nav id="nav" aria-label="Main navigation"></nav>
+</div></header>
+<main id="app" tabindex="-1"></main>
+<footer>QuizForge Online Quiz Maker &mdash; Level 1, Task 2 project built for the CodSoft Web Development Internship.</footer>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ---------- Helpers & storage ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };
+const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { toast('Could not save: browser storage is unavailable.'); return false; } };
+let tt; function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 3200); }
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+/* ---------- Sample quizzes ---------- */
+const Q = (q, o, a) => ({ q, o, a });
+const SAMPLES = [
+ { id:'s-java', title:'Java Fundamentals', category:'Java', creator:'QuizForge Team', description:'Test your knowledge of core Java concepts and syntax.', questions:[
+  Q('Which keyword is used to inherit a class in Java?',['implements','extends','inherits','super'],1),
+  Q('What is the size of an int in Java?',['16 bits','32 bits','64 bits','8 bits'],1),
+  Q('Which method is the entry point of a Java program?',['start()','run()','main()','init()'],2),
+  Q('Which of these is NOT a primitive type?',['boolean','char','String','double'],2)]},
+ { id:'s-html', title:'HTML Essentials', category:'HTML', creator:'QuizForge Team', description:'Tags, attributes and semantic markup basics.', questions:[
+  Q('What does HTML stand for?',['Hyper Text Markup Language','High Tech Modern Language','Hyperlinks and Text Markup Language','Home Tool Markup Language'],0),
+  Q('Which tag creates a hyperlink?',['<link>','<a>','<href>','<url>'],1),
+  Q('Which tag is semantic for page navigation?',['<nav>','<div>','<span>','<section>'],0),
+  Q('Which attribute gives alternative text for an image?',['title','src','alt','name'],2)]},
+ { id:'s-css', title:'CSS Styling Challenge', category:'CSS', creator:'QuizForge Team', description:'Selectors, the box model, flexbox and more.', questions:[
+  Q('Which property changes text color?',['font-color','color','text-style','fg'],1),
+  Q('Which display value enables flexbox?',['flex','block','inline','grid-flex'],0),
+  Q('Which selector targets an element with id "box"?',['.box','box','#box','*box'],2),
+  Q('Which part of the box model is outermost?',['padding','border','content','margin'],3)]},
+ { id:'s-gk', title:'General Knowledge Mix', category:'General Knowledge', creator:'QuizForge Team', description:'A friendly mix of world facts for everyone.', questions:[
+  Q('What is the capital of Japan?',['Seoul','Beijing','Tokyo','Bangkok'],2),
+  Q('Which planet is known as the Red Planet?',['Venus','Mars','Jupiter','Mercury'],1),
+  Q('How many continents are there?',['5','6','7','8'],2),
+  Q('Who wrote "Romeo and Juliet"?',['Charles Dickens','William Shakespeare','Mark Twain','Jane Austen'],1)]}
+];
+const CATS = ['Java','HTML','CSS','General Knowledge','Other'];
+
+/* ---------- Data access (with validation for corrupted data) ---------- */
+const validQuiz = z => z && typeof z.id === 'string' && typeof z.title === 'string' && Array.isArray(z.questions) && z.questions.length &&
+  z.questions.every(q => q && typeof q.q === 'string' && Array.isArray(q.o) && q.o.length === 4 && Number.isInteger(q.a) && q.a >= 0 && q.a < 4);
+const userQuizzes = () => { const a = load('qf_quizzes', []); return Array.isArray(a) ? a.filter(validQuiz) : []; };
+const allQuizzes = () => SAMPLES.concat(userQuizzes());
+const getQuiz = id => allQuizzes().find(q => q.id === id);
+const users = () => { const u = load('qf_users', []); return Array.isArray(u) ? u.filter(x => x && x.email && x.hash) : []; };
+const session = () => { const s = load('qf_session', null); return s && s.email && users().find(u => u.email === s.email) ? s : null; };
+const owner = () => { const s = session(); return s ? s.email : 'guest'; };
+const history = () => { const h = load('qf_history', []); return Array.isArray(h) ? h.filter(x => x && x.title && typeof x.score === 'number') : []; };
+const myHistory = () => history().filter(h => h.user === owner());
+
+/* ---------- Password hashing (demo only) ---------- */
+async function hashPw(pw, salt) {
+  if (window.crypto && crypto.subtle) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(salt + pw));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  let h = 5381; const s = salt + pw; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; // weak fallback
+  return 'f' + h.toString(16);
+}
+
+/* ---------- Router ---------- */
+const NAV = [['home','Home'],['explore','Explore Quizzes'],['create','Create Quiz'],['my','My Quizzes']];
+let view = 'home', S = {}, filter = { q: '', cat: 'All' };
+function go(v) { view = v; if (v === 'explore') filter = { q: '', cat: 'All' }; render(); window.scrollTo(0, 0); $('#nav').classList.remove('open'); $('#menu').setAttribute('aria-expanded', 'false'); }
+function toggleMenu() { const o = $('#nav').classList.toggle('open'); $('#menu').setAttribute('aria-expanded', o); }
+function render() {
+  const s = session();
+  const items = NAV.concat([[s ? 'profile' : 'login', s ? 'Profile (' + s.name.split(' ')[0] + ')' : 'Login']]);
+  $('#nav').innerHTML = items.map(([k, l]) => `<button class="${(view === k || (k === 'login' && view === 'register')) ? 'on' : ''}" ${view === k ? 'aria-current="page"' : ''} onclick="go('${k}')">${esc(l)}</button>`).join('');
+  const m = $('#app'); m.className = 'fade'; void m.offsetWidth;
+  ({ home, explore, create, my, login, register, profile, quiz, result }[view] || home)();
+  document.title = 'QuizForge';
+}
+
+/* ---------- Home ---------- */
+function home() {
+  const qs = allQuizzes(), total = qs.reduce((n, q) => n + q.questions.length, 0);
+  $('#app').innerHTML = `
+  <section class="hero"><h1>Build it. Share it. <b>Ace it.</b></h1>
+   <p>Welcome to QuizForge. Create your own multiple-choice quizzes in minutes, or jump into a sample quiz and test your skills. No account needed to start.</p>
+   <div class="row"><button class="btn" onclick="go('create')">Create a Quiz</button><button class="btn ghost" onclick="go('explore')">Explore Quizzes</button></div></section>
+  <div class="stats">
+   <div class="stat"><b>${qs.length}</b><span>Quizzes available</span></div>
+   <div class="stat"><b>${total}</b><span>Questions in total</span></div>
+   <div class="stat"><b>${userQuizzes().length}</b><span>Created by users</span></div>
+   <div class="stat"><b>${myHistory().length}</b><span>Your attempts</span></div></div>
+  <h2 class="t">Featured quizzes</h2><div class="grid">${qs.slice(0, 3).map(card).join('')}</div>`;
+}
+
+/* ---------- Explore ---------- */
+function card(q, mine) {
+  return `<article class="card"><span class="tag">${esc(q.category || 'Other')}</span><h3>${esc(q.title)}</h3><p>${esc(q.description)}</p>
+  <div class="meta">${q.questions.length} questions &bull; by ${esc(q.creator)}</div>
+  <div class="row"><button class="btn sm" onclick="startQuiz('${q.id}')">Start Quiz</button>${mine ? `<button class="btn sm ghost" onclick="delQuiz('${q.id}')" aria-label="Delete ${esc(q.title)}">Delete</button>` : ''}</div></article>`;
+}
+function explore() {
+  $('#app').innerHTML = `<h2 class="t">Explore quizzes</h2>
+  <div class="tools"><label class="l" for="sq" style="margin:0;position:absolute;left:-9999px">Search quizzes</label>
+  <input id="sq" type="search" placeholder="Search by title, description or creator" value="${esc(filter.q)}" oninput="filter.q=this.value;list()">
+  </div><div class="tools" role="group" aria-label="Category filters" id="chips"></div><div id="list"></div>`;
+  list();
+}
+function list() {
+  $('#chips').innerHTML = ['All'].concat(CATS).map(c => `<button class="chip ${filter.cat === c ? 'on' : ''}" aria-pressed="${filter.cat === c}" onclick="filter.cat='${c}';list()">${c}</button>`).join('');
+  const t = filter.q.trim().toLowerCase();
+  const r = allQuizzes().filter(q => (filter.cat === 'All' || (q.category || 'Other') === filter.cat) && (!t || (q.title + ' ' + q.description + ' ' + q.creator).toLowerCase().includes(t)));
+  $('#list').innerHTML = r.length ? `<div class="grid">${r.map(q => card(q)).join('')}</div>` :
+    `<div class="empty"><h3>No quizzes found</h3><p>Try a different search or category, or create your own quiz.</p><button class="btn" onclick="go('create')">Create a Quiz</button></div>`;
+}
+
+/* ---------- Create ---------- */
+let qCount = 0;
+function create() {
+  $('#app').innerHTML = `<div class="narrow"><h2 class="t">Create a quiz</h2>
+  <form id="cf" class="panel" novalidate onsubmit="saveQuiz(event)">
+   <label class="l" for="qt">Quiz title</label><input id="qt" maxlength="80"><div class="err" id="e-qt"></div>
+   <label class="l" for="qd">Description</label><textarea id="qd" rows="3" maxlength="300"></textarea><div class="err" id="e-qd"></div>
+   <div class="row"><div style="flex:1 1 200px"><label class="l" for="qc">Creator name</label><input id="qc" maxlength="40" value="${session() ? esc(session().name) : ''}"><div class="err" id="e-qc"></div></div>
+   <div style="flex:1 1 200px"><label class="l" for="qk">Category</label><select id="qk">${CATS.map(c => `<option>${c}</option>`).join('')}</select></div></div>
+   <div id="qs"></div><div class="err" id="e-qs"></div>
+   <div class="row" style="margin-top:18px"><button type="button" class="btn ghost" onclick="addQ()">Add Question</button><button class="btn" type="submit">Save Quiz</button></div>
+  </form></div>`;
+  qCount = 0; addQ();
+}
+function addQ() {
+  const n = ++qCount, box = document.createElement('div'); box.className = 'qbox'; box.dataset.n = n;
+  box.innerHTML = `<div class="top"><strong class="qn"></strong><button type="button" class="btn sm ghost" onclick="rmQ(this)">Remove Question</button></div>
+  <label class="l" for="qq${n}">Question</label><input id="qq${n}" class="qq" maxlength="200">
+  <fieldset style="border:0;padding:0"><legend class="l">Options (select the correct answer)</legend>
+  ${[0, 1, 2, 3].map(i => `<div class="oprow"><input type="radio" name="c${n}" value="${i}" aria-label="Mark option ${i + 1} correct"><input class="oo" aria-label="Option ${i + 1}" placeholder="Option ${i + 1}" maxlength="120"></div>`).join('')}</fieldset>
+  <div class="err"></div>`;
+  $('#qs').appendChild(box); numberQs();
+  if (n > 1) box.querySelector('input').focus();
+}
+function rmQ(b) {
+  if (document.querySelectorAll('.qbox').length <= 1) return toast('A quiz needs at least one question.');
+  b.closest('.qbox').remove(); numberQs();
+}
+function numberQs() { document.querySelectorAll('.qbox').forEach((b, i) => b.querySelector('.qn').textContent = 'Question ' + (i + 1)); }
+function saveQuiz(e) {
+  e.preventDefault(); let ok = true;
+  const set = (id, m) => { $('#e-' + id).textContent = m; if (m) ok = false; };
+  const title = $('#qt').value.trim(), desc = $('#qd').value.trim(), cr = $('#qc').value.trim();
+  set('qt', title ? '' : 'Enter a quiz title.'); set('qd', desc ? '' : 'Enter a description.'); set('qc', cr ? '' : 'Enter the creator name.');
+  const questions = [];
+  document.querySelectorAll('.qbox').forEach((b, i) => {
+    const q = b.querySelector('.qq').value.trim(), o = [...b.querySelectorAll('.oo')].map(x => x.value.trim()), c = b.querySelector('input[type=radio]:checked');
+    let m = '';
+    if (!q) m = 'Enter the question text.'; else if (o.some(x => !x)) m = 'Fill in all four options.';
+    else if (new Set(o.map(x => x.toLowerCase())).size < 4) m = 'Options must be different from each other.';
+    else if (!c) m = 'Select the correct answer.';
+    b.querySelector('.err').textContent = m ? 'Question ' + (i + 1) + ': ' + m : '';
+    if (m) ok = false; else questions.push({ q, o, a: +c.value });
+  });
+  set('qs', document.querySelectorAll('.qbox').length ? '' : 'Add at least one question.');
+  if (!ok) return toast('Please fix the highlighted problems.');
+  const all = userQuizzes();
+  all.push({ id: 'u-' + uid(), title, description: desc, creator: cr, category: $('#qk').value, owner: owner(), questions, created: new Date().toISOString() });
+  if (store('qf_quizzes', all)) { toast('Quiz created successfully!'); go('my'); }
+}
+
+/* ---------- My quizzes & history ---------- */
+function my() {
+  const mine = userQuizzes().filter(q => q.owner === owner()), h = myHistory().slice().reverse(), s = session();
+  $('#app').innerHTML = `<h2 class="t">My quizzes</h2>${s ? '' : '<p class="meta" style="margin-bottom:14px">You are browsing as a guest. <a href="#" onclick="go(\'login\');return false">Log in</a> to keep your quizzes and history under your own account.</p>'}
+  ${mine.length ? `<div class="grid">${mine.map(q => card(q, true)).join('')}</div>` : `<div class="empty"><h3>No quizzes yet</h3><p>Quizzes you create will show up here.</p><button class="btn" onclick="go('create')">Create a Quiz</button></div>`}
+  <h2 class="t" style="margin-top:36px">Quiz history</h2>
+  ${h.length ? `<div class="panel wrap"><table><thead><tr><th>Quiz</th><th>Score</th><th>Date</th></tr></thead><tbody>${h.map(x => `<tr><td>${esc(x.title)}</td><td>${x.score}/${x.total} (${Math.round(x.score / x.total * 100)}%)</td><td>${esc(new Date(x.date).toLocaleString())}</td></tr>`).join('')}</tbody></table></div>` :
+  `<div class="empty"><h3>No attempts yet</h3><p>Take a quiz and your scores will appear here.</p><button class="btn" onclick="go('explore')">Explore Quizzes</button></div>`}`;
+}
+function delQuiz(id) {
+  const q = userQuizzes().find(x => x.id === id); if (!q) return;
+  if (!confirm('Delete "' + q.title + '"? This cannot be undone.')) return;
+  store('qf_quizzes', userQuizzes().filter(x => x.id !== id)); toast('Quiz deleted.'); my();
+}
+
+/* ---------- Taking a quiz ---------- */
+function startQuiz(id) {
+  const q = getQuiz(id); if (!q) return toast('That quiz is no longer available.');
+  S = { quiz: q, i: 0, ans: new Array(q.questions.length).fill(null) }; go('quiz');
+}
+function quiz() {
+  const { quiz: z, i, ans } = S; if (!z) return go('explore');
+  const q = z.questions[i], n = z.questions.length, done = ans.filter(a => a !== null).length;
+  $('#app').innerHTML = `<div class="narrow"><h2 class="t">${esc(z.title)}</h2>
+  <div class="meta">Question ${i + 1} of ${n} &bull; ${done} answered</div>
+  <div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${done}" aria-label="Quiz progress"><div style="width:${done / n * 100}%"></div></div>
+  <div class="panel"><fieldset style="border:0;padding:0"><legend style="font-size:1.25rem;font-weight:700;margin-bottom:16px">${esc(q.q)}</legend>
+  ${q.o.map((o, k) => `<label class="opt ${ans[i] === k ? 'sel' : ''}"><input type="radio" name="o" ${ans[i] === k ? 'checked' : ''} onchange="pick(${k})"><span>${esc(o)}</span></label>`).join('')}</fieldset>
+  <div class="nav2"><button class="btn ghost" ${i === 0 ? 'disabled' : ''} onclick="step(-1)">Previous</button>
+  ${i < n - 1 ? `<button class="btn" onclick="step(1)">Next</button>` : `<button class="btn" onclick="submitQuiz()">Submit Quiz</button>`}</div>
+  <div class="dots" aria-label="Jump to question">${ans.map((a, k) => `<button class="dot ${a !== null ? 'done' : ''} ${k === i ? 'cur' : ''}" aria-label="Question ${k + 1}${a !== null ? ' answered' : ' unanswered'}" onclick="S.i=${k};quiz()">${k + 1}</button>`).join('')}</div></div></div>`;
+}
+function pick(k) { S.ans[S.i] = k; quiz(); const c = document.querySelector('.opt input:checked'); if (c) c.focus(); }
+function step(d) { S.i = Math.max(0, Math.min(S.quiz.questions.length - 1, S.i + d)); quiz(); }
+function submitQuiz() {
+  const un = S.ans.map((a, i) => a === null ? i + 1 : null).filter(Boolean);
+  if (un.length) {
+    toast('Unanswered: question ' + un.join(', ') + '.');
+    if (!confirm('You have ' + un.length + ' unanswered question(s): ' + un.join(', ') + '.\nSubmit anyway? Unanswered questions count as incorrect.')) return;
+  } else if (!confirm('Submit your quiz now? You cannot change answers afterwards.')) return;
+  const score = S.ans.filter((a, i) => a === S.quiz.questions[i].a).length;
+  const h = history(); h.push({ user: owner(), quizId: S.quiz.id, title: S.quiz.title, score, total: S.quiz.questions.length, date: new Date().toISOString() });
+  store('qf_history', h); S.score = score; go('result');
+}
+
+/* ---------- Results ---------- */
+function result() {
+  const { quiz: z, ans, score } = S; if (!z) return go('explore');
+  const n = z.questions.length, pct = Math.round(score / n * 100);
+  $('#app').innerHTML = `<div class="narrow"><div class="panel score"><h2>${esc(z.title)} &mdash; Results</h2>
+  <div class="ring" style="background:conic-gradient(var(--red) ${pct}%,var(--card2) 0)"><span>${pct}%</span></div>
+  <p><strong>Score: ${score} / ${n}</strong></p><p class="meta">${score} correct, ${n - score} incorrect or unanswered. ${pct >= 70 ? 'Great work!' : pct >= 40 ? 'Good effort, try again to improve.' : 'Keep practicing, you will get there.'}</p>
+  <div class="row" style="justify-content:center;margin-top:16px"><button class="btn" onclick="startQuiz('${z.id}')">Retry Quiz</button><button class="btn ghost" onclick="go('explore')">Explore Quizzes</button><button class="btn ghost" onclick="go('home')">Home</button></div></div>
+  <h3 style="margin:22px 0 12px">Detailed review</h3>
+  ${z.questions.map((q, i) => { const ok = ans[i] === q.a; return `<div class="panel rev ${ok ? 'ok' : 'bad'}"><strong>${i + 1}. ${esc(q.q)}</strong>
+   <p>Your answer: <span class="${ok ? 'good' : 'bad'}">${ans[i] === null ? 'Not answered' : esc(q.o[ans[i]])} ${ok ? '(Correct)' : '(Incorrect)'}</span></p>
+   ${ok ? '' : `<p>Correct answer: <span class="good">${esc(q.o[q.a])}</span></p>`}</div>`; }).join('')}</div>`;
+}
+
+/* ---------- Auth (frontend demo only) ---------- */
+const authNote = '<div class="note">Demo only: accounts live in this browser\'s localStorage and passwords are salted and hashed with SHA-256. Real authentication needs a backend and a slow password hash such as bcrypt or Argon2.</div>';
+function field(id, label, type, extra) { return `<label class="l" for="${id}">${label}</label><input id="${id}" type="${type}" ${extra || ''}><div class="err" id="e-${id}"></div>`; }
+function login() {
+  $('#app').innerHTML = `<div class="narrow" style="max-width:440px"><h2 class="t">Log in</h2><form class="panel" novalidate onsubmit="doLogin(event)">
+  ${field('le', 'Email', 'email', 'autocomplete="email"')}${field('lp', 'Password', 'password', 'autocomplete="current-password"')}
+  <div class="err" id="e-lf"></div><div class="row" style="margin-top:16px"><button class="btn" type="submit">Log in</button><button type="button" class="btn ghost" onclick="go('register')">Create account</button></div>${authNote}</form></div>`;
+}
+function register() {
+  $('#app').innerHTML = `<div class="narrow" style="max-width:440px"><h2 class="t">Create account</h2><form class="panel" novalidate onsubmit="doReg(event)">
+  ${field('rn', 'Full name', 'text', 'maxlength="40"')}${field('re', 'Email', 'email', 'autocomplete="email"')}${field('rp', 'Password (min 6 characters)', 'password', 'autocomplete="new-password"')}${field('rc', 'Confirm password', 'password', 'autocomplete="new-password"')}
+  <div class="row" style="margin-top:16px"><button class="btn" type="submit">Register</button><button type="button" class="btn ghost" onclick="go('login')">I have an account</button></div>${authNote}</form></div>`;
+}
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+async function doReg(e) {
+  e.preventDefault(); let ok = true; const e_ = (id, m) => { $('#e-' + id).textContent = m; if (m) ok = false; };
+  const name = $('#rn').value.trim(), email = $('#re').value.trim().toLowerCase(), pw = $('#rp').value, cf = $('#rc').value;
+  e_('rn', name ? '' : 'Enter your name.'); e_('re', EMAIL.test(email) ? (users().some(u => u.email === email) ? 'This email is already registered.' : '') : 'Enter a valid email.');
+  e_('rp', pw.length >= 6 ? '' : 'Use at least 6 characters.'); e_('rc', cf === pw ? '' : 'Passwords do not match.');
+  if (!ok) return;
+  const salt = uid() + uid(), u = users(); u.push({ name, email, salt, hash: await hashPw(pw, salt) });
+  if (store('qf_users', u) && store('qf_session', { email })) { toast('Welcome, ' + name + '!'); go('profile'); }
+}
+async function doLogin(e) {
+  e.preventDefault(); let ok = true; const e_ = (id, m) => { $('#e-' + id).textContent = m; if (m) ok = false; };
+  const email = $('#le').value.trim().toLowerCase(), pw = $('#lp').value;
+  e_('le', EMAIL.test(email) ? '' : 'Enter a valid email.'); e_('lp', pw ? '' : 'Enter your password.'); $('#e-lf').textContent = '';
+  if (!ok) return;
+  const u = users().find(x => x.email === email);
+  if (!u || u.hash !== await hashPw(pw, u.salt)) return $('#e-lf').textContent = 'Incorrect email or password.';
+  store('qf_session', { email }); toast('Logged in.'); go('profile');
+}
+function profile() {
+  const s = session(); if (!s) return go('login');
+  const u = users().find(x => x.email === s.email), h = myHistory(), best = h.length ? Math.max(...h.map(x => Math.round(x.score / x.total * 100))) : 0;
+  $('#app').innerHTML = `<div class="narrow"><h2 class="t">Hello, ${esc(u.name)}</h2><div class="panel"><p class="meta">${esc(u.email)}</p>
+  <div class="stats"><div class="stat"><b>${userQuizzes().filter(q => q.owner === s.email).length}</b><span>Quizzes created</span></div><div class="stat"><b>${h.length}</b><span>Attempts</span></div><div class="stat"><b>${best}%</b><span>Best score</span></div></div>
+  <div class="row"><button class="btn" onclick="go('my')">My Quizzes &amp; History</button><button class="btn ghost" onclick="logout()">Log out</button></div>${authNote}</div></div>`;
+}
+function logout() { try { localStorage.removeItem('qf_session'); } catch (e) {} toast('You have been logged out.'); go('home'); }
+
+render();
+</script>
+</body>
+</html>
